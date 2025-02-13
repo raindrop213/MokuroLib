@@ -1,11 +1,272 @@
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Mokuro·Lib</title>
+    <style>
+        :root {
+            --colorBackground: #ebeaee;
+            --color1: #f9f9fb;
+            --color2: #e2e2e9;
+            --color3: #a2a2a2;
+            --color3a: rgba(7, 16, 19, 0.3);
+        }
+
+        body {
+            background-color: var(--colorBackground);
+            font-family: "Noto Sans SC", sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .manga-list, .volumes-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center; /* 中心对齐 */
+            border-radius: px;
+        }
+
+        .manga-item, .volume-item {
+            background: var(--color1);
+            padding: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px var(--color3a);
+            text-align: center; /* 文本居中 */
+            width: 160px; /* 固定宽度 */
+            word-wrap: break-word; /* 自动换行 */
+            border-radius: 6px;
+        }
+
+        .manga-item img, .volume-item img {
+            width: 100%; /* 图片宽度撑满容器 */
+            height: 215px; /* 固定高度 */
+            object-fit: cover; /* 保持图片比例并裁剪 */
+            display: block;
+            margin: 0 auto; /* 图片居中 */
+            border-radius: 3px;
+        }
+
+        .manga-item:hover, .volume-item:hover {
+            background: var(--color2);
+        }
+
+        .volumes-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* 防止容器本身滚动 */
+        }
+
+        .volumes-list {
+            background: var(--colorBackground);
+            padding: 20px;
+            max-width: 80%;
+            max-height: 80vh;
+            border-radius: 8px;
+            overflow-y: auto;
+            overscroll-behavior: contain; /* 防止滚动链接 */
+        }
+
+        .manga-title {
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+
+        .manga-author {
+            font-size: 0.9em;
+            color: var(--color3);
+            font-size: 10px;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--color1);
+            padding: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px var(--color3a);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controls input[type="range"] {
+            width: 100px;
+            -webkit-appearance: none;
+            background: transparent;
+        }
+
+        /* 滑动条轨道 */
+        .controls input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 3px;
+            background: var(--color2);
+            border-radius: 1.5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* 滑动条滑块 */
+        .controls input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: var(--color3);
+            margin-top: -4.5px;
+            cursor: pointer;
+        }
+
+        /* 移除焦点时的轮廓 */
+        .controls input[type="range"]:focus {
+            outline: none;
+        }
+
+        /* 修改滚动条 */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--color1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--colorBackground);
+        }
+
+    </style>
 </head>
 <body>
-    <p></p>
+    <div class="manga-list" id="mangaList"></div>
+    <div class="volumes-container" id="volumesContainer">
+        <div class="volumes-list" id="volumesList"></div>
+    </div>
+    <div class="controls">
+        <input type="range" id="sizeSlider" min="100" max="300" value="190">
+    </div>
+
+    <script>
+        async function loadMangaList() {
+            const mangaList = document.getElementById('mangaList');
+            const volumesContainer = document.getElementById('volumesContainer');
+            const volumesList = document.getElementById('volumesList');
+
+            try {
+                const response = await fetch('/list-manga');
+                const mangas = await response.json();
+                
+                mangas.forEach(manga => {
+                    const mangaItem = document.createElement('div');
+                    mangaItem.className = 'manga-item';
+                    
+                    // 添加封面图片
+                    const coverImage = document.createElement('img');
+                    coverImage.src = manga.cover;
+                    coverImage.alt = `${manga.title} 封面`;
+
+                    const title = document.createElement('div');
+                    title.className = 'manga-title';
+                    title.textContent = manga.title;
+
+                    const author = document.createElement('div');
+                    author.className = 'manga-author';
+                    author.textContent = manga.author;
+
+                    mangaItem.appendChild(coverImage);
+                    mangaItem.appendChild(title);
+                    mangaItem.appendChild(author);
+                    
+                    mangaItem.onclick = () => {
+                        volumesList.innerHTML = '';
+                        manga.volumes.forEach(volume => {
+                            const volumeItem = document.createElement('div');
+                            volumeItem.className = 'volume-item';
+                            
+                            // 创建链接元素
+                            const link = document.createElement('a');
+                            link.href = volume.path;
+                            link.style.textDecoration = 'none';
+                            link.style.color = 'inherit';
+                            
+                            // 添加点击事件处理
+                            link.onclick = (e) => {
+                                e.stopPropagation(); // 阻止事件冒泡到volumesContainer
+                            };
+
+                            // 使用每卷的封面图片
+                            const volumeCoverImage = document.createElement('img');
+                            volumeCoverImage.src = volume.cover;
+                            volumeCoverImage.alt = `${volume.title} 封面`;
+
+                            const volumeTitle = document.createElement('div');
+                            // 移除作者名，只显示卷号
+                            volumeTitle.textContent = volume.title.split('] ').pop();
+
+                            link.appendChild(volumeCoverImage);
+                            link.appendChild(volumeTitle);
+                            volumeItem.appendChild(link);
+                            volumesList.appendChild(volumeItem);
+                        });
+                        volumesContainer.style.display = 'flex';
+                    };
+                    
+                    mangaList.appendChild(mangaItem);
+                });
+            } catch (error) {
+                console.error('加载漫画列表失败:', error);
+            }
+        }
+        
+        volumesContainer.onclick = (e) => {
+            if (e.target === volumesContainer) {
+                volumesContainer.style.display = 'none';
+            }
+        };
+        // 防止滚动穿透
+        volumesList.addEventListener('wheel', (e) => {
+            e.stopPropagation();
+        });
+
+        // 添加滑动控制条功能
+        const sizeSlider = document.getElementById('sizeSlider');
+        
+        // 从localStorage读取保存的大小设置
+        const savedSize = localStorage.getItem('mangaItemSize');
+        if (savedSize) {
+            sizeSlider.value = savedSize;
+            updateItemsSize(savedSize);
+        }
+        
+        // 抽取更新大小的函数
+        function updateItemsSize(newWidth) {
+            const newHeight = Math.round(newWidth * 1.34375);
+            const items = document.querySelectorAll('.manga-item');
+            
+            items.forEach(item => {
+                item.style.width = `${newWidth}px`;
+                const img = item.querySelector('img');
+                if (img) {
+                    img.style.height = `${newHeight}px`;
+                }
+            });
+        }
+        
+        sizeSlider.addEventListener('input', (e) => {
+            const newWidth = e.target.value;
+            updateItemsSize(newWidth);
+            // 保存设置到localStorage
+            localStorage.setItem('mangaItemSize', newWidth);
+        });
+
+        loadMangaList();
+    </script>
 </body>
 </html>
