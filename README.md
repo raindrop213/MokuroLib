@@ -8,8 +8,6 @@
 
 ![image](https://github.com/user-attachments/assets/8e53d9ee-2dee-4562-85a7-e981f72f61c2)
 
-![image](https://github.com/user-attachments/assets/e1d83b10-289e-48d8-84c0-39fc12d8136b)
-
 ## 多卷命令
 ```
 mokuro --disable_confirmation --parent_dir "?" --as_one_file False
