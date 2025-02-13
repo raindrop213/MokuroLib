@@ -1,4 +1,4 @@
-基于mokuro v0.2.2
+基于 [mokuro](https://github.com/kha-white/mokuro) v0.2.2
 的建议漫画书架 + mokuro整合包
 
 ## 说明
