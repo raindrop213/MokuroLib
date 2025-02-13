@@ -6,10 +6,9 @@
 - 仅改了页面交互， .mokuro文件与原版相同
 - 想用原版的话将"mokuro（原版）"的内容替换进"mokuro-py310\Lib\site-packages\mokuro"。当然用原版的mokuro生成的也可以显示到页面上，只要有html文件，以及漫画文件格式正确。
 
-https://github.com/user-attachments/assets/8e53d9ee-2dee-4562-85a7-e981f72f61c2
+![image](https://github.com/user-attachments/assets/8e53d9ee-2dee-4562-85a7-e981f72f61c2)
 
-
-https://github.com/user-attachments/assets/e1d83b10-289e-48d8-84c0-39fc12d8136b
+![image](https://github.com/user-attachments/assets/e1d83b10-289e-48d8-84c0-39fc12d8136b)
 
 ## 多卷命令
 ```
