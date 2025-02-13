@@ -12,7 +12,7 @@
 mokuro --disable_confirmation --parent_dir "?" --as_one_file False
 ```
 ```
-mokuro-py310\python.exe -m mokuro --disable_confirmation --parent_dir "G:\pypj2\mokuro-portable-gpu\manga\[武田日向] やえかのカルテ" --as_one_file False
+mokuro-py310\python.exe -m mokuro --disable_confirmation --parent_dir "manga\[武田日向] やえかのカルテ" --as_one_file False
 ```
 
 ## 单卷命令
@@ -20,7 +20,7 @@ mokuro-py310\python.exe -m mokuro --disable_confirmation --parent_dir "G:\pypj2\
 mokuro --disable_confirmation "?" --as_one_file False
 ```
 ```
-mokuro-py310\python.exe -m mokuro --disable_confirmation "G:\pypj2\mokuro-portable-gpu\manga\[西尾維新×大暮維人] 化物語\[西尾維新] 化物語 第01巻" --as_one_file False
+mokuro-py310\python.exe -m mokuro --disable_confirmation "manga\[西尾維新×大暮維人] 化物語\[西尾維新] 化物語 第01巻" --as_one_file False
 ```
 
 ## 其他命令
